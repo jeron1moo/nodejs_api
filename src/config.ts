@@ -11,3 +11,8 @@ export const db = {
 };
 
 export const corsUrl = process.env.CORS_URL;
+
+export const logDirectory = process.env.LOG_DIRECTORY;
+
+export const googleClientId = process.env.GOOGLE_CLIENT_ID;
+export const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
