@@ -3,21 +3,32 @@ import { model, Schema, Document } from 'mongoose';
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'users';
 
-export default interface User extends Document {
-  name: string;
-  email?: string;
+export interface GoogleToken {
+  access_token?: string;
+  refresh_token?: string;
+  token_type?: string;
+  expiry_date?: number;
+}
+
+export interface User {
+  name?: string;
+  googleId: string;
+  googleToken: GoogleToken;
+  email: string;
   password?: string;
-  profilePicUrl?: string;
+  profilePicUrl: string;
   verified?: boolean;
   status?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
+type UserType = User & Document;
+
 const schema = new Schema(
   {
     googleId: {
-      type: String,
+      type: Schema.Types.String,
       required: true,
       unique: true,
     },
@@ -68,4 +79,8 @@ const schema = new Schema(
   },
 );
 
-export const UserModel = model<User>(DOCUMENT_NAME, schema, COLLECTION_NAME);
+export const UserModel = model<UserType>(
+  DOCUMENT_NAME,
+  schema,
+  COLLECTION_NAME,
+);

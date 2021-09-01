@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import Logger from '../core/Logger';
-import { db } from '../config';
-
-const dbURI = `mongodb://${db.host}:${db.port}/${db.name}`;
+import { dbURI } from '../config';
 
 const options = {
   useNewUrlParser: true,

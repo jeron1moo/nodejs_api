@@ -3,3 +3,4 @@ build/**/*
 .gitignore
 .git
 Dockerfile
+docker-compose

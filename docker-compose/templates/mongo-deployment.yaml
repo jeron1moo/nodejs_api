@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\dzmitry.sakhvon\Desktop\kompose.exe convert -c
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: app
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\dzmitry.sakhvon\Desktop\kompose.exe convert -c
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongo
+    spec:
+      containers:
+      - env:
+        - name: CORS_URL
+          valueFrom:
+            configMapKeyRef:
+              key: CORS_URL
+              name: env
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: DB_HOST
+              name: env
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: DB_NAME
+              name: env
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: DB_PORT
+              name: env
+        - name: GITHUB_APP_ID
+          valueFrom:
+            configMapKeyRef:
+              key: GITHUB_APP_ID
+              name: env
+        - name: GITHUB_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: GITHUB_CLIENT_ID
+              name: env
+        - name: GITHUB_CLIENT_SECERET
+          valueFrom:
+            configMapKeyRef:
+              key: GITHUB_CLIENT_SECERET
+              name: env
+        - name: GITHUB_PRIVATE_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: GITHUB_PRIVATE_KEY
+              name: env
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              key: GOOGLE_CLIENT_ID
+              name: env
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              key: GOOGLE_CLIENT_SECRET
+              name: env
+        - name: GOOGLE_REDIRECT
+          valueFrom:
+            configMapKeyRef:
+              key: GOOGLE_REDIRECT
+              name: env
+        - name: MONGO_INITDB_DATABASE
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              key: NODE_ENV
+              name: env
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              key: PORT
+              name: env
+        image: mongo:latest
+        imagePullPolicy: ""
+        name: mongo
+        ports:
+        - containerPort: 27017
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-db
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: mongo-db
+        persistentVolumeClaim:
+          claimName: mongo-db
+status: {}
