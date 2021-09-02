@@ -1,4 +1,5 @@
 import { model, Schema, Document } from 'mongoose';
+import { Subscription } from './Subscription';
 
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'users';
@@ -11,9 +12,9 @@ export interface GoogleToken {
 }
 
 export interface User {
-  name?: string;
-  googleId: string;
-  googleToken: GoogleToken;
+  name: string;
+  googleId?: string;
+  googleToken?: GoogleToken;
   email: string;
   password?: string;
   profilePicUrl: string;
@@ -21,6 +22,8 @@ export interface User {
   status?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  subscription?: Subscription;
+  billingID?: string;
 }
 
 type UserType = User & Document;
@@ -28,9 +31,7 @@ type UserType = User & Document;
 const schema = new Schema(
   {
     googleId: {
-      type: Schema.Types.String,
-      required: true,
-      unique: true,
+      type: String,
     },
     googleToken: {
       access_token: String,
@@ -40,36 +41,44 @@ const schema = new Schema(
     },
     slug: {
       type: String,
-      required: true,
       unique: true,
     },
+    billingId: {
+      type: String,
+      unique: true,
+    },
+    subscription: {
+      type: Schema.Types.ObjectId,
+      ref: 'Subscription',
+      index: true,
+    },
     name: {
-      type: Schema.Types.String,
+      type: String,
       required: true,
       trim: true,
       maxlength: 100,
     },
     email: {
-      type: Schema.Types.String,
+      type: String,
       required: true,
       unique: true,
       trim: true,
       select: false,
     },
     password: {
-      type: Schema.Types.String,
+      type: String,
       select: false,
     },
     profilePicUrl: {
-      type: Schema.Types.String,
+      type: String,
       trim: true,
     },
     verified: {
-      type: Schema.Types.Boolean,
+      type: Boolean,
       default: false,
     },
     status: {
-      type: Schema.Types.Boolean,
+      type: Boolean,
       default: true,
     },
   },

@@ -29,3 +29,7 @@ export const appId = process.env.GITHUB_APP_ID || 1;
 export const privateKey = process.env.GITHUB_PRIVATE_KEY || 'as';
 export const clientId = process.env.GITHUB_CLIENT_ID || 'id';
 export const clientSecret = process.env.GITHUB_CLIENT_SECERET || 'secret';
+
+export const stripiKey = process.env.STRIPI_KEY || 'key';
+export const stripiSecret = process.env.STRIPI_SECRET || 'secret';
+export const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;

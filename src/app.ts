@@ -6,11 +6,16 @@ import routesV1 from './routes/v1';
 import Logger from './core/Logger';
 import helmet from 'helmet';
 import setupGoogle from './google';
-import setupGithub from './github';
 import { ApiError, InternalError, NotFoundError } from './core/ApiError';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
+
+declare module 'express-session' {
+  export interface SessionData {
+    customerID: any;
+  }
+}
 
 const app = express();
 app.use(express.json());
@@ -33,7 +38,6 @@ app.use(
 );
 
 setupGoogle(app);
-setupGithub(app);
 
 app.use('/api', routesV1);
 

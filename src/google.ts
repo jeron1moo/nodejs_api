@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const passport = require('passport');
 const Strategy = require('passport-google-oauth').OAuth2Strategy;
 
@@ -12,6 +11,9 @@ import {
 import Logger from './core/Logger';
 import UserRepo from './database/repository/UserRepo';
 import { GoogleToken, User, UserModel } from './database/model/User';
+import { addNewCustomer } from './stripe';
+import { Subscription } from './database/model/Subscription';
+import SubscriptionRepo from './database/repository/SubscriptionRepo';
 
 export default (app: Application): void => {
   passport.use(
@@ -38,6 +40,7 @@ export default (app: Application): void => {
         }
 
         try {
+          const createdSubscription = await SubscriptionRepo.create();
           const userProps: User = {
             googleId: profile.id as string,
             email: email as string,
@@ -47,6 +50,7 @@ export default (app: Application): void => {
             } as GoogleToken,
             name: profile.displayName as string,
             profilePicUrl: avatarUrl as string,
+            subscription: createdSubscription as Subscription,
           };
           const user = await UserRepo.signInOrSignUp(userProps);
           done(null, user);
@@ -83,7 +87,11 @@ export default (app: Application): void => {
     passport.authenticate('google', {
       failureRedirect: '/redirect',
     }),
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
+      // @ts-ignore
+      const customer = await addNewCustomer(req.session?.passport?.user.email);
+      req.session.customerID = customer;
+
       res.redirect('/api');
     },
   );
