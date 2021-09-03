@@ -2,8 +2,6 @@ import { stripiSecret, rootUrl, stripiKey } from './config';
 import Stripe from 'stripe';
 const stripe = new Stripe(stripiSecret, { apiVersion: '2020-08-27' });
 
-
-
 export const publishableKey = async () => {
   return {
     publishableKey: stripiKey,

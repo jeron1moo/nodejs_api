@@ -5,6 +5,18 @@ import UserRepo from '../../../database/repository/UserRepo';
 import { User } from '../../../database/model/User';
 import bcrypt from 'bcrypt';
 import { addNewCustomer } from '../../../stripe';
+import { swGetUserApi } from './get-user-info';
+
+export const swUserRouter = {
+  '/api/user': {
+    get: {
+      ...swGetUserApi,
+    },
+    post: {
+      ...swGetUserApi,
+    },
+  },
+};
 
 const router = express.Router();
 
@@ -14,7 +26,6 @@ router.get('/:id', async (req, res) => {
   if (!user) throw new BadRequestError('User not registered');
   return res?.send(user);
 });
-
 
 router.post('/', async (req, res) => {
   const user = await UserRepo.findByEmail(req.body.email);
@@ -35,8 +46,11 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/updatePlan', async (req, res) => {
-  // @ts-ignore
-  const users = await UserRepo.updatePlan(req?.session?.passport?.user?.email, '');
+  const users = await UserRepo.updatePlan(
+    // @ts-ignore
+    req?.session?.passport?.user?.email,
+    '',
+  );
 
   if (!users) throw new BadRequestError('No users defined');
 

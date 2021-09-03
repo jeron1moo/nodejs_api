@@ -1,10 +1,19 @@
 import express from 'express';
 import user from './user';
 import stripe from './stripe';
+import { swGetApiInfo } from './get-api-info';
+
+export const swApiRouter = {
+  '/api': {
+    get: {
+      ...swGetApiInfo,
+    },
+  },
+};
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   return res.send({ message: 'Hey you' });
 });
 

@@ -1,9 +1,19 @@
 import express from 'express';
 import { stripeWebhookSecret } from '../../../config';
-
 import Logger from '../../../core/Logger';
-import UserRepo from '../../../database/repository/UserRepo';
 import * as stripe from '../../../stripe';
+import { swGetStripeApi } from './get-stripe-info';
+
+export const swStripeRouter = {
+  '/api/stripe': {
+    get: {
+      ...swGetStripeApi,
+    },
+    post: {
+      ...swGetStripeApi,
+    },
+  },
+};
 
 const router = express.Router();
 
@@ -32,8 +42,8 @@ router.get('/', async (req, res) => {
   return res.send(paymentIntent);
 });
 
-router.post('/create-customer', async (req, res) => {
-  const customer = await stripe.createCustomer(req.body.email);
+router.post('/createCustomer', async (req, res) => {
+  const customer = await stripe.addNewCustomer(req.body.email);
   res.send(customer);
 });
 
@@ -48,7 +58,7 @@ router.get('/createSubscription', async (req, res) => {
 });
 
 router.get('/cancelSubscription', async (req, res) => {
-  const session = stripe.cancelSubscription();
+  const session = stripe.cancelSubscription('');
   return res.send(session);
 });
 
@@ -58,6 +68,7 @@ router.get('/forceCancelSubscription', async (req, res) => {
 });
 
 router.get('/checkout', async (req, res) => {
+  // @ts-ignore
   const { customer } = req.session;
   const session = await stripe.createSession(
     customer,
@@ -74,6 +85,7 @@ router.post(
     let event;
 
     try {
+      // @ts-ignore
       event = stripe.webhooks.constructEvent(
         req.body,
         req.headers['stripe-signature'],

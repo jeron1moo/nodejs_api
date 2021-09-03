@@ -10,6 +10,8 @@ import { ApiError, InternalError, NotFoundError } from './core/ApiError';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
+import swaggerUI from 'swagger-ui-express';
+import swDocument from './openapi';
 
 declare module 'express-session' {
   export interface SessionData {
@@ -23,6 +25,7 @@ app.use(express.urlencoded());
 app.use(cors({ origin: corsUrl }));
 app.use(helmet());
 app.use(cookieParser());
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swDocument));
 app.use(
   session({
     store: MongoStore.create({ mongoUrl: dbURI, ttl: 14 * 24 * 60 }),
