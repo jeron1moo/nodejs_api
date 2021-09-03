@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app:
+    image: jeron1mo/nodejs-api
+    container_name: app
+    restart: always
+    env_file: .env
+    ports:
+      - '5000:5000'
+    links:
+      - $DB_HOST
+
+  mongo:
+    image: mongo:latest
+    container_name: $DB_HOST
+    restart: always
+    env_file: .env
+    environment:
+      - MONGO_INITDB_DATABASE=$DB_NAME
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db:
